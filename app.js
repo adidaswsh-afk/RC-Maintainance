@@ -322,6 +322,79 @@ function deleteCar(carId) {
   render();
 }
 
+function sameCarLog(log, car) {
+  if (!log || !car) return false;
+  if (log.carId && log.carId === car.id) return true;
+  return log.carName === car.name;
+}
+
+function findCarForLog(log) {
+  if (!log) return null;
+
+  if (log.carId) {
+    const carById = state.cars.find(c => c.id === log.carId);
+    if (carById) return carById;
+  }
+
+  return state.cars.find(c => c.name === log.carName) || null;
+}
+
+function logTime(log) {
+  const t = Number(log?.id);
+  return Number.isFinite(t) ? t : 0;
+}
+
+function recalculateCarAfterRunLogChange(car) {
+  if (!car) return;
+  normalizeOilState(car);
+
+  const carRunLogs = state.runLogs.filter(log => sameCarLog(log, car));
+  car.totalRuns = carRunLogs.reduce((sum, log) => sum + (Number(log.count) || 0), 0);
+
+  Object.keys(OIL_NAMES).forEach(oilType => {
+    const relatedOilLogs = state.oilLogs
+      .filter(log => sameCarLog(log, car) && log.oilType === oilType)
+      .sort((a, b) => logTime(a) - logTime(b));
+
+    const lastOilLog = relatedOilLogs[relatedOilLogs.length - 1];
+
+    if (!lastOilLog) {
+      car.oils[oilType].number = '';
+      car.oils[oilType].interval = getDefaultInterval(oilType, car);
+      car.oils[oilType].lastChangedRuns = 0;
+      return;
+    }
+
+    const oilLogTime = logTime(lastOilLog);
+    const runsBeforeOrAtOilChange = carRunLogs
+      .filter(runLog => logTime(runLog) <= oilLogTime)
+      .reduce((sum, runLog) => sum + (Number(runLog.count) || 0), 0);
+
+    car.oils[oilType].number = lastOilLog.newNumber || '';
+    car.oils[oilType].interval = Number(lastOilLog.interval) || getDefaultInterval(oilType, car);
+    car.oils[oilType].lastChangedRuns = runsBeforeOrAtOilChange;
+  });
+}
+
+function deleteRunLog(logId) {
+  const log = state.runLogs.find(l => l.id === logId);
+  if (!log) return;
+
+  const count = Number(log.count) || 0;
+  const message = `确定删除这条跑圈记录吗？\n车辆：${log.carName}\n组数：${count}组电`;
+  if (!confirm(message)) return;
+
+  const car = findCarForLog(log);
+  state.runLogs = state.runLogs.filter(l => l.id !== logId);
+
+  if (car) {
+    recalculateCarAfterRunLogChange(car);
+  }
+
+  save();
+  render();
+}
+
 // ========== 跑圈记录 ==========
 function addRun(carId, count, date, placeId, damage) {
   const car = state.cars.find(c => c.id === carId);
@@ -342,6 +415,7 @@ function addRun(carId, count, date, placeId, damage) {
     id: Date.now().toString(),
     date: date || todayString(),
     place: placeName,
+    carId: car.id,
     carName: car.name,
     count: safeCount,
     damage: damage || ''
@@ -362,6 +436,7 @@ function renderRunLog() {
 
   logs.forEach(log => {
     const tr = document.createElement('tr');
+
     [
       log.date,
       log.place || '-',
@@ -373,6 +448,15 @@ function renderRunLog() {
       td.textContent = escapeText(value);
       tr.appendChild(td);
     });
+
+    const actionTd = document.createElement('td');
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'record-delete-btn';
+    deleteBtn.textContent = '删除';
+    deleteBtn.onclick = () => deleteRunLog(log.id);
+    actionTd.appendChild(deleteBtn);
+    tr.appendChild(actionTd);
+
     tbody.appendChild(tr);
   });
 }
@@ -603,8 +687,9 @@ document.getElementById('runlog-car-filter').onchange = renderRunLog;
 document.getElementById('btn-clear-runlog').onclick = () => {
   if (confirm('清空所有跑圈记录？')) {
     state.runLogs = [];
+    state.cars.forEach(car => recalculateCarAfterRunLogChange(car));
     save();
-    renderRunLog();
+    render();
   }
 };
 
