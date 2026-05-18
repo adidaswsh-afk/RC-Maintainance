@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+  <title>RC保养助手</title>
+
+  <!-- 这里连接 CSS -->
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- 这里连接 PWA manifest -->
+  <link rel="manifest" href="./manifest.json">
+</head>
+
+<body>
+  <div id="app">
+    <div id="alert" class="alert hidden"></div>
+
+    <header class="app-header">
+      <div>
+        <h1>RC 保养助手</h1>
+        <p>记录跑圈、油液和车辆状态</p>
+      </div>
+      <div class="header-badge">RC MAINTENANCE</div>
+    </header>
+
+    <main class="main-layout">
+      <!-- 左侧：车库 + 当前车辆 -->
+      <section class="left-column">
+        <div id="car-list" class="panel-card">
+          <div class="section-title">
+            <h3>🚗 我的车库</h3>
+          </div>
+          <ul id="cars-ul"></ul>
+          <button id="btn-add-car">+ 添加车辆</button>
+        </div>
+
+        <div id="car-info" class="panel-card">
+          <h2 id="car-name">未选择车辆</h2>
+
+          <div class="oil-summary">
+            <p>总组数：<span id="total-runs">0</span></p>
+
+            <div class="oil-grid">
+              <span>前避震：<b id="oil-fs">-</b></span>
+              <span>后避震：<b id="oil-rs">-</b></span>
+              <span>前差速：<b id="oil-fd">-</b></span>
+              <span>中差速：<b id="oil-cd">-</b></span>
+              <span>后差速：<b id="oil-rd">-</b></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右侧：操作区 -->
+      <section class="right-column">
+        <div class="action-cards">
+          <div class="action-card">
+            <div class="card-title">🎤 语音记录</div>
+            <button id="btn-speak" class="mic-btn">开始语音</button>
+            <p class="hint">说“车名 跑X组”</p>
+          </div>
+
+          <div class="action-card">
+            <div class="card-title">🏁 跑圈记录</div>
+
+            <div class="field-row">
+              <label>📅</label>
+              <input type="date" id="run-date">
+            </div>
+
+            <div class="field-row">
+              <label>📍</label>
+              <select id="run-place"></select>
+              <button id="btn-add-place" class="circle-btn">＋</button>
+            </div>
+
+            <div class="field-row">
+              <label>🔢</label>
+              <input type="number" id="run-count" value="4" min="1" max="20" step="1">
+              <button id="btn-manual">跑这些组</button>
+            </div>
+
+            <div class="field-row">
+              <label>💥</label>
+              <input type="text" id="damage-input" placeholder="战损位置（选填）">
+            </div>
+          </div>
+
+          <div class="action-card">
+            <div class="card-title">🛢️ 更换油液</div>
+
+            <div class="oil-change-grid">
+              <button class="oil-btn" data-oil="frontShock">前避震</button>
+              <button class="oil-btn" data-oil="rearShock">后避震</button>
+              <button class="oil-btn" data-oil="frontDiff">前差速</button>
+              <button class="oil-btn" data-oil="centerDiff">中差速</button>
+              <button class="oil-btn" data-oil="rearDiff">后差速</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 底部历史记录：左右并排 -->
+    <section class="history-container">
+      <div class="history-section panel-card">
+        <button id="btn-toggle-runlog" class="history-toggle">📋 跑圈记录</button>
+
+        <div id="runlog-panel" class="hidden panel">
+          <div class="history-filter">
+            <label>筛选车辆：</label>
+            <select id="runlog-car-filter">
+              <option value="">全部</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table id="runlog-table">
+              <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>地点</th>
+                  <th>车辆</th>
+                  <th>组数</th>
+                  <th>战损</th>
+                </tr>
+              </thead>
+              <tbody id="runlog-tbody"></tbody>
+            </table>
+          </div>
+
+          <button id="btn-clear-runlog" class="clear-btn">清空</button>
+        </div>
+      </div>
+
+      <div class="history-section panel-card">
+        <button id="btn-toggle-oillog" class="history-toggle">🛢️ 换油记录</button>
+
+        <div id="oillog-panel" class="hidden panel">
+          <div class="history-filter">
+            <label>筛选车辆：</label>
+            <select id="oillog-car-filter">
+              <option value="">全部</option>
+            </select>
+          </div>
+
+          <div class="table-wrap">
+            <table id="oillog-table">
+              <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>车辆</th>
+                  <th>部位</th>
+                  <th>新油编号</th>
+                </tr>
+              </thead>
+              <tbody id="oillog-tbody"></tbody>
+            </table>
+          </div>
+
+          <button id="btn-clear-oillog" class="clear-btn">清空</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 这里连接 JS -->
+  <script src="./app.js"></script>
+</body>
+</html>
