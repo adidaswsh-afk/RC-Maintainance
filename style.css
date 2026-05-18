@@ -1,0 +1,549 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, "Microsoft YaHei", sans-serif;
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0, 198, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 85% 20%, rgba(255, 170, 0, 0.12), transparent 26%),
+    linear-gradient(135deg, #070707, #141414 45%, #090909);
+  color: #eee;
+  min-height: 100vh;
+}
+
+#app {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 顶部标题 */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 22px;
+  border-radius: 24px;
+  background: rgba(20, 20, 20, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #00c6ff;
+  letter-spacing: 1px;
+}
+
+.app-header p {
+  margin: 8px 0 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.header-badge {
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #ffaa00;
+  border: 1px solid rgba(255, 170, 0, 0.45);
+  background: rgba(255, 170, 0, 0.08);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* 提醒条 */
+.alert {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  color: white;
+  padding: 14px;
+  text-align: center;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
+}
+
+/* 主体左右布局 */
+.main-layout {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.9fr) minmax(520px, 1.4fr);
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.left-column,
+.right-column {
+  min-width: 0;
+}
+
+/* 通用卡片 */
+.panel-card,
+.action-card {
+  background: rgba(25, 25, 25, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42);
+}
+
+/* 左侧上下清晰分区 */
+.left-column {
+  display: grid;
+  gap: 20px;
+}
+
+.panel-card {
+  padding: 20px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#car-list h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #00c6ff;
+}
+
+/* 车库列表 */
+#car-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+#car-list li {
+  background: rgba(255, 255, 255, 0.055);
+  padding: 14px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid transparent;
+  transition: 0.2s;
+}
+
+#car-list li:hover {
+  border-color: #00c6ff;
+  background: rgba(0, 198, 255, 0.1);
+}
+
+.car-name {
+  flex: 1;
+}
+
+.car-delete {
+  background: transparent;
+  color: #ff5555;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 8px;
+  opacity: 0.75;
+}
+
+.car-delete:hover {
+  opacity: 1;
+  transform: scale(1.18);
+}
+
+#btn-add-car {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  border: 1px dashed #666;
+  padding: 14px;
+  width: 100%;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 14px;
+}
+
+#btn-add-car:hover {
+  border-color: #00c6ff;
+  color: #00c6ff;
+  background: rgba(0, 198, 255, 0.08);
+}
+
+/* 当前车辆信息 */
+#car-info h2 {
+  margin: 0 0 18px;
+  font-size: 26px;
+  font-weight: 700;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.oil-summary {
+  display: grid;
+  gap: 16px;
+}
+
+.oil-summary p {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #aaa;
+}
+
+#total-runs {
+  color: #ffaa00;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.oil-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.oil-grid span {
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.22);
+  color: #aaa;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.oil-grid b {
+  color: #0ff;
+}
+
+/* 右侧操作区 */
+.action-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.action-card {
+  padding: 20px;
+}
+
+.action-card:nth-child(2) {
+  grid-row: span 2;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  color: #00c6ff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* 按钮 */
+button {
+  font-family: 'Orbitron', sans-serif;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.mic-btn {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #0f9b0f, #00c853);
+  color: white;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.hint {
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+  margin: 0;
+}
+
+/* 表单 */
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.field-row label {
+  font-size: 18px;
+  width: 30px;
+  text-align: center;
+  color: #aaa;
+}
+
+.field-row input,
+.field-row select {
+  min-width: 0;
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 14px;
+  backdrop-filter: blur(5px);
+}
+
+.field-row input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+#btn-manual {
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  color: white;
+  border-radius: 999px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.circle-btn {
+  background: #444;
+  color: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+/* 油液按钮 */
+.oil-change-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(90px, 1fr));
+  gap: 12px;
+}
+
+.oil-btn {
+  padding: 14px 8px;
+  background: rgba(255, 170, 0, 0.08);
+  color: #ffaa00;
+  border: 1px solid rgba(255, 170, 0, 0.6);
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.oil-btn:hover {
+  background: rgba(255, 170, 0, 0.18);
+}
+
+/* 历史记录左右布局 */
+.history-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(255, 255, 255, 0.16);
+}
+
+.history-section {
+  min-width: 0;
+}
+
+.history-toggle {
+  width: 100%;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid #555;
+  border-radius: 999px;
+  color: #ccc;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.history-toggle:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+.panel {
+  margin-top: 16px;
+  background: rgba(10, 10, 10, 0.5);
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.history-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.history-filter label {
+  font-size: 14px;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+.history-filter select {
+  flex: 1;
+  padding: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ddd;
+  font-size: 14px;
+}
+
+table th {
+  text-align: left;
+  padding: 10px 6px;
+  border-bottom: 1px solid #555;
+  color: #00c6ff;
+  white-space: nowrap;
+}
+
+table td {
+  padding: 10px 6px;
+  border-bottom: 1px solid #333;
+  white-space: nowrap;
+}
+
+.clear-btn {
+  margin-top: 14px;
+  background: rgba(255, 85, 85, 0.1);
+  color: #ff5555;
+  border: 1px solid #ff5555;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* 平板 */
+@media (max-width: 980px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .action-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* 手机 */
+@media (max-width: 640px) {
+  #app {
+    padding: 14px;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .app-header h1 {
+    font-size: 24px;
+  }
+
+  .main-layout,
+  .action-cards,
+  .history-container {
+    grid-template-columns: 1fr;
+  }
+
+  .action-card:nth-child(2) {
+    grid-row: auto;
+  }
+
+  .oil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-container {
+    border-top: 2px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .history-section:first-child {
+    padding-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+  }
+
+  #btn-manual {
+    padding: 12px;
+    font-size: 12px;
+  }
+  /* ========== 性能优化补丁 ========== */
+
+/* 1. 关闭高耗性能的玻璃模糊 */
+.panel-card,
+.action-card,
+#car-info,
+.panel {
+  backdrop-filter: none !important;
+}
+
+/* 2. 降低阴影强度 */
+.panel-card,
+.action-card,
+.app-header {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* 3. 不要 transition: all，只让颜色和背景变化 */
+button,
+#car-list li,
+.oil-btn,
+.history-toggle {
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
+}
+
+/* 4. 背景简化一点，减少重绘 */
+body {
+  background: linear-gradient(135deg, #070707, #141414, #090909) !important;
+}
+
+/* 5. 表格区域限制高度，数据多时不会拖慢整个页面 */
+.panel {
+  max-height: 420px;
+  overflow-y: auto;
+}
+}
